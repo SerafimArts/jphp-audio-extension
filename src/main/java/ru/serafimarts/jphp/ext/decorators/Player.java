@@ -1,37 +1,40 @@
 package ru.serafimarts.jphp.ext.decorators;
 
-import java.io.InputStream;
 import javazoom.jl.decoder.*;
-import javax.sound.sampled.*;
+
+import javax.sound.sampled.BooleanControl;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import java.io.InputStream;
 
 public class Player {
     private final Object lock = new Object();
 
     // play\pause
-    private boolean played      = false;
+    private boolean played = false;
 
     // frames count
-    private int frames          = 2147483647;
+    private int frames = 2147483647;
 
     // track ended
-    private boolean ended       = false;
+    private boolean ended = false;
 
-    private Bitstream       bitstream;
-    private Decoder         decoder;
-    private Equalizer       equalizer;
-    private AudioOutput     output;
+    private Bitstream bitstream;
+    private Decoder decoder;
+    private Equalizer equalizer;
+    private AudioOutput output;
 
-    private FloatControl    gain;
-    private FloatControl    balance;
-    private FloatControl    pan;
-    private BooleanControl  mute;
+    private FloatControl gain;
+    private FloatControl balance;
+    private FloatControl pan;
+    private BooleanControl mute;
 
     public Player(InputStream stream)
-        throws JavaLayerException, LineUnavailableException {
+            throws JavaLayerException, LineUnavailableException {
 
-        this.bitstream  = new Bitstream(stream);
-        this.equalizer  = new Equalizer();
-        this.decoder    = new Decoder();
+        this.bitstream = new Bitstream(stream);
+        this.equalizer = new Equalizer();
+        this.decoder = new Decoder();
         this.decoder.setEqualizer(this.equalizer);
 
         {
@@ -44,27 +47,27 @@ public class Player {
             bitstream.closeFrame();
         }
 
-        this.output      = new AudioOutput(this.decoder);
+        this.output = new AudioOutput(this.decoder);
 
-        this.gain        = (FloatControl)this.output.getLine().getControl(FloatControl.Type.MASTER_GAIN);
-        this.balance     = (FloatControl)this.output.getLine().getControl(FloatControl.Type.BALANCE);
-        this.pan         = (FloatControl)this.output.getLine().getControl(FloatControl.Type.PAN);
-        this.mute        = (BooleanControl)this.output.getLine().getControl(BooleanControl.Type.MUTE);
+        this.gain = (FloatControl) this.output.getLine().getControl(FloatControl.Type.MASTER_GAIN);
+        this.balance = (FloatControl) this.output.getLine().getControl(FloatControl.Type.BALANCE);
+        this.pan = (FloatControl) this.output.getLine().getControl(FloatControl.Type.PAN);
+        this.mute = (BooleanControl) this.output.getLine().getControl(BooleanControl.Type.MUTE);
 
         this.render();
     }
 
 
-
-
-
     public void play()
-        throws JavaLayerException {
+            throws JavaLayerException {
+        this.output.flush();
         this.played = true;
+        this.unmute();
     }
 
 
     public void pause() {
+        this.mute();
         this.output.flush();
         this.played = false;
     }
@@ -81,7 +84,7 @@ public class Player {
     }
 
     public void toggle()
-        throws JavaLayerException {
+            throws JavaLayerException {
 
         if (this.isPlayed()) {
             this.pause();
@@ -90,13 +93,11 @@ public class Player {
         }
     }
 
-    public void mute()
-    {
+    public void mute() {
         this.mute.setValue(true);
     }
 
-    public void unmute()
-    {
+    public void unmute() {
         this.mute.setValue(false);
     }
 
@@ -114,7 +115,6 @@ public class Player {
     }
 
 
-
     public int getPosition() {
         return this.output.getPosition();
     }
@@ -123,15 +123,17 @@ public class Player {
         // 100 / (max-min) * ($value - min) = $percents
 
         return 100 / this.gain.getMinimum() *
-            (this.gain.getValue() - this.gain.getMinimum());
+                (this.gain.getValue() - this.gain.getMinimum());
     }
 
     public void setVolume(float value) {
         // (max-min) / 100 * $percents + min = $value
 
-        if (value < 0.0)   { value = (float)0.0; }
-        else
-        if (value > 100.0) { value = (float)100.0; }
+        if (value < 0.0) {
+            value = (float) 0.0;
+        } else if (value > 100.0) {
+            value = (float) 100.0;
+        }
 
         double volume = Math.abs(this.gain.getMinimum() / 100 * value) + this.gain.getMinimum();
 
@@ -141,17 +143,15 @@ public class Player {
             this.unmute();
         }
 
-        this.gain.setValue((float)volume);
+        this.gain.setValue((float) volume);
     }
 
-    public float getVolumeMinimum()
-    {
-        return (float)0.0;
+    public float getVolumeMinimum() {
+        return (float) 0.0;
     }
 
-    public float getVolumeMaximum()
-    {
-        return (float)100.0;
+    public float getVolumeMaximum() {
+        return (float) 100.0;
     }
 
 
@@ -160,23 +160,22 @@ public class Player {
     }
 
     public void setBalance(float value) {
-        if (value < this.balance.getMinimum()) { value = this.balance.getMinimum(); }
-        else
-        if (value > this.balance.getMaximum()) { value = this.balance.getMaximum(); }
+        if (value < this.balance.getMinimum()) {
+            value = this.balance.getMinimum();
+        } else if (value > this.balance.getMaximum()) {
+            value = this.balance.getMaximum();
+        }
 
         this.balance.setValue(value);
     }
 
-    public float getBalanceMinimum()
-    {
+    public float getBalanceMinimum() {
         return this.balance.getMinimum();
     }
 
-    public float getBalanceMaximum()
-    {
+    public float getBalanceMaximum() {
         return this.balance.getMaximum();
     }
-
 
 
     public float getPan() {
@@ -184,36 +183,29 @@ public class Player {
     }
 
     public void setPan(float value) {
-        if (value < this.pan.getMinimum()) { value = this.pan.getMinimum(); }
-        else
-        if (value > this.pan.getMaximum()) { value = this.pan.getMaximum(); }
+        if (value < this.pan.getMinimum()) {
+            value = this.pan.getMinimum();
+        } else if (value > this.pan.getMaximum()) {
+            value = this.pan.getMaximum();
+        }
 
         this.pan.setValue(value);
     }
 
-    public float getPanMinimum()
-    {
+    public float getPanMinimum() {
         return this.pan.getMinimum();
     }
 
-    public float getPanMaximum()
-    {
+    public float getPanMaximum() {
         return this.pan.getMaximum();
     }
 
 
-
-
-
-
-
-
-    private void render()
-    {
+    private void render() {
         new Thread() {
             public void run() {
                 try {
-                    while(frames > 0 && !ended) {
+                    while (frames > 0 && !ended) {
                         if (played) {
                             frames--;
                             //System.out.println(frames);
@@ -221,7 +213,7 @@ public class Player {
 
                             Header h = bitstream.readFrame();
                             if (h == null) return;
-                            SampleBuffer buffer = (SampleBuffer)decoder.decodeFrame(h, bitstream);
+                            SampleBuffer buffer = (SampleBuffer) decoder.decodeFrame(h, bitstream);
                             if (buffer == null) return;
                             synchronized (lock) {
                                 output.write(buffer.getBuffer(), 0, buffer.getBufferLength());
@@ -229,7 +221,9 @@ public class Player {
                             bitstream.closeFrame();
                         }
                     }
-                } catch (Exception e) { System.out.println(e); }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
         }.start();
     }

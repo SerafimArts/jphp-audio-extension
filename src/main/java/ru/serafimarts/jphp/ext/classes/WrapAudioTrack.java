@@ -1,43 +1,44 @@
 package ru.serafimarts.jphp.ext.classes;
 
+import javazoom.jl.decoder.JavaLayerException;
 import php.runtime.Memory;
-import java.io.InputStream;
-import javax.sound.sampled.*;
-import java.io.BufferedInputStream;
 import php.runtime.env.Environment;
+import php.runtime.ext.core.classes.stream.Stream;
+import php.runtime.lang.BaseObject;
 import php.runtime.memory.DoubleMemory;
 import php.runtime.memory.LongMemory;
 import php.runtime.memory.ObjectMemory;
 import php.runtime.reflection.ClassEntity;
 import ru.serafimarts.jphp.ext.AudioExtension;
-import javazoom.jl.decoder.JavaLayerException;
-import php.runtime.ext.core.classes.stream.Stream;
-import static php.runtime.annotation.Reflection.*;
 import ru.serafimarts.jphp.ext.decorators.Player;
-import org.develnext.jphp.swing.classes.components.support.RootObject;
 
+import javax.sound.sampled.LineUnavailableException;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+
+import static php.runtime.annotation.Reflection.*;
 
 
 @Name(AudioExtension.NAMESPACE + "AudioTrack")
-public class WrapAudioTrack extends RootObject {
-
-
-    public WrapAudioTrack(Environment env) {
-        super(env);
-    }
-    public WrapAudioTrack(Environment env, ClassEntity clazz) {
-        super(env, clazz);
-    }
+public class WrapAudioTrack extends BaseObject {
 
 
     private Player player;
 
+    public WrapAudioTrack(Environment env) {
+        super(env);
+    }
+
+
+    public WrapAudioTrack(Environment env, ClassEntity clazz) {
+        super(env, clazz);
+    }
 
     @Signature({
             @Arg(value = "stream", typeClass = Stream.CLASS_NAME)
     })
     public Memory __construct(Environment env, Memory... args)
-        throws LineUnavailableException, JavaLayerException {
+            throws LineUnavailableException, JavaLayerException {
 
         InputStream stream = Stream.getInputStream(env, args[0]);
         InputStream buffer = new BufferedInputStream(stream);
@@ -50,7 +51,7 @@ public class WrapAudioTrack extends RootObject {
 
     @Signature
     public Memory play(Environment env, Memory... args)
-        throws JavaLayerException {
+            throws JavaLayerException {
         player.play();
         return ObjectMemory.valueOf(this);
     }
@@ -63,7 +64,7 @@ public class WrapAudioTrack extends RootObject {
 
     @Signature
     public Memory toggle(Environment env, Memory... args)
-        throws JavaLayerException {
+            throws JavaLayerException {
         player.toggle();
         return ObjectMemory.valueOf(this);
     }
@@ -87,13 +88,11 @@ public class WrapAudioTrack extends RootObject {
     }
 
 
-
-
     @Signature
     public Memory isPlayed(Environment env, Memory... args) {
         return player.isPlayed()
-            ? Memory.TRUE
-            : Memory.FALSE;
+                ? Memory.TRUE
+                : Memory.FALSE;
     }
 
     @Signature
@@ -111,12 +110,10 @@ public class WrapAudioTrack extends RootObject {
     }
 
 
-
     @Signature
     public Memory getPosition(Environment env, Memory... args) {
         return LongMemory.valueOf(player.getPosition());
     }
-
 
 
     @Signature
@@ -141,7 +138,6 @@ public class WrapAudioTrack extends RootObject {
     }
 
 
-
     @Signature
     public Memory setPan(Environment env, Memory... args) {
         this.player.setPan(args[0].toFloat());
@@ -162,7 +158,6 @@ public class WrapAudioTrack extends RootObject {
     public Memory getPanMaximum(Environment env, Memory... args) {
         return DoubleMemory.valueOf(this.player.getPanMaximum());
     }
-
 
 
     @Signature

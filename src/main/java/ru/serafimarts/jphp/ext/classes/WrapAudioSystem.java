@@ -2,20 +2,22 @@ package ru.serafimarts.jphp.ext.classes;
 
 
 import php.runtime.Memory;
-import javax.sound.sampled.Mixer;
 import php.runtime.env.Environment;
+import php.runtime.lang.BaseObject;
 import php.runtime.memory.ArrayMemory;
 import php.runtime.memory.LongMemory;
 import php.runtime.memory.ObjectMemory;
-import javax.sound.sampled.AudioSystem;
 import php.runtime.reflection.ClassEntity;
 import ru.serafimarts.jphp.ext.AudioExtension;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Mixer;
+
 import static php.runtime.annotation.Reflection.*;
-import org.develnext.jphp.swing.classes.components.support.RootObject;
 
 
 @Name(AudioExtension.NAMESPACE + "AudioSystem")
-public class WrapAudioSystem extends RootObject {
+public class WrapAudioSystem extends BaseObject {
     public WrapAudioSystem(Environment env) {
         super(env);
     }
@@ -24,15 +26,7 @@ public class WrapAudioSystem extends RootObject {
         super(env, clazz);
     }
 
-
-    @Signature
-    public Memory __construct(Environment env, Memory... args) {
-        return Memory.NULL;
-    }
-
-
-    protected static Memory getFilteredDevices(Environment env, String filter)
-    {
+    protected static Memory getFilteredDevices(Environment env, String filter) {
         Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
         ArrayMemory devices = new ArrayMemory();
 
@@ -49,10 +43,9 @@ public class WrapAudioSystem extends RootObject {
             @Arg(value = "supported", optional = @Optional("null"))
     })
     public static Memory getDevices(Environment env, Memory... args)
-            throws RuntimeException
-    {
+            throws RuntimeException {
         Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-        ArrayMemory devices    = new ArrayMemory();
+        ArrayMemory devices = new ArrayMemory();
 
         int supported = args[0].toInteger();
 
@@ -64,6 +57,11 @@ public class WrapAudioSystem extends RootObject {
         }
 
         return devices;
+    }
+
+    @Signature
+    public Memory __construct(Environment env, Memory... args) {
+        return Memory.NULL;
     }
 
 }

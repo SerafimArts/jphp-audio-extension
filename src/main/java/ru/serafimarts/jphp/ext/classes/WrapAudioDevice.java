@@ -1,27 +1,28 @@
 package ru.serafimarts.jphp.ext.classes;
 
 import php.runtime.Memory;
-import javax.sound.sampled.Port;
-import javax.sound.sampled.Mixer;
 import php.runtime.env.Environment;
-import javax.sound.sampled.AudioSystem;
+import php.runtime.lang.BaseObject;
 import php.runtime.memory.StringMemory;
 import php.runtime.reflection.ClassEntity;
 import ru.serafimarts.jphp.ext.AudioExtension;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
+
 import static php.runtime.annotation.Reflection.*;
-import org.develnext.jphp.swing.classes.components.support.RootObject;
 
 
 @Name(AudioExtension.NAMESPACE + "AudioDevice")
-public class WrapAudioDevice extends RootObject {
-    public static final int MICROPHONE      = 2;
-    public static final int LINE_IN         = 4;
-    public static final int COMPACT_DISC    = 8;
-    public static final int SPEAKER         = 16;
-    public static final int HEADPHONE       = 32;
-    public static final int LINE_OUT        = 64;
-
-
+public class WrapAudioDevice extends BaseObject {
+    public static final int MICROPHONE = 2;
+    public static final int LINE_IN = 4;
+    public static final int COMPACT_DISC = 8;
+    public static final int SPEAKER = 16;
+    public static final int HEADPHONE = 32;
+    public static final int LINE_OUT = 64;
+    private Mixer.Info info;
 
     public WrapAudioDevice(Environment env) {
         super(env);
@@ -31,14 +32,15 @@ public class WrapAudioDevice extends RootObject {
         super(env, clazz);
     }
 
+
     public WrapAudioDevice(Environment env, Mixer.Info mixer) {
         super(env);
         this.info = mixer;
     }
 
-
-    private Mixer.Info info;
-    public Mixer.Info getInfo() { return info; }
+    public Mixer.Info getInfo() {
+        return info;
+    }
 
     @Signature
     private Memory __construct(Environment env, Memory... args) {
@@ -70,7 +72,7 @@ public class WrapAudioDevice extends RootObject {
             @Arg("supportedType")
     })
     public Memory isSupported(Environment env, Memory... args)
-        throws RuntimeException {
+            throws RuntimeException {
 
         int type = args[0].toInteger();
         Port.Info portInfo;
