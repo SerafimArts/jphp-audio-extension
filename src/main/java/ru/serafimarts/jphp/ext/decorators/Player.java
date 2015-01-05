@@ -48,7 +48,6 @@ public class Player {
         }
 
         this.output = new AudioOutput(this.decoder);
-        this.frames = output.getAudioFormat().getSampleSizeInBits();
 
         this.gain = (FloatControl) this.output.getLine().getControl(FloatControl.Type.MASTER_GAIN);
         this.balance = (FloatControl) this.output.getLine().getControl(FloatControl.Type.BALANCE);
@@ -59,9 +58,7 @@ public class Player {
     }
 
 
-    public void play()
-            throws JavaLayerException {
-        this.renderFrame(); // Write buffer
+    public void play() throws JavaLayerException {
         this.played = true;
         this.unmute();
     }
