@@ -48,6 +48,7 @@ public class Player {
         }
 
         this.output = new AudioOutput(this.decoder);
+        this.frames = output.getAudioFormat().getSampleSizeInBits();
 
         this.gain = (FloatControl) this.output.getLine().getControl(FloatControl.Type.MASTER_GAIN);
         this.balance = (FloatControl) this.output.getLine().getControl(FloatControl.Type.BALANCE);
@@ -60,7 +61,7 @@ public class Player {
 
     public void play()
             throws JavaLayerException {
-        this.output.flush();
+        this.renderFrame(); // Write buffer
         this.played = true;
         this.unmute();
     }
@@ -68,8 +69,8 @@ public class Player {
 
     public void pause() {
         this.mute();
-        this.output.flush();
         this.played = false;
+        this.output.flush();
     }
 
 
@@ -208,23 +209,27 @@ public class Player {
                     while (frames > 0 && !ended) {
                         if (played) {
                             frames--;
-                            //System.out.println(frames);
-                            //System.out.println(this.played);
-
-                            Header h = bitstream.readFrame();
-                            if (h == null) return;
-                            SampleBuffer buffer = (SampleBuffer) decoder.decodeFrame(h, bitstream);
-                            if (buffer == null) return;
-                            synchronized (lock) {
-                                output.write(buffer.getBuffer(), 0, buffer.getBufferLength());
-                            }
-                            bitstream.closeFrame();
+                            renderFrame();
                         }
                     }
                 } catch (Exception e) {
                     System.out.println(e);
+                    return;
                 }
             }
         }.start();
+    }
+
+
+    private void renderFrame()
+        throws BitstreamException, DecoderException, JavaLayerException {
+            Header h = bitstream.readFrame();
+            if (h == null) return;
+            SampleBuffer buffer = (SampleBuffer) decoder.decodeFrame(h, bitstream);
+            if (buffer == null) return;
+            synchronized (lock) {
+                output.write(buffer.getBuffer(), 0, buffer.getBufferLength());
+            }
+            bitstream.closeFrame();
     }
 }
