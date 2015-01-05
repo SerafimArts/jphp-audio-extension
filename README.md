@@ -1,4 +1,4 @@
-jphp-awt-extension
+jphp-audio-extension
 ==================
 
 Audio Extension for Jphp Language
