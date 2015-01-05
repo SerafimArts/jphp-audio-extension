@@ -1,7 +1,13 @@
-sourceSets {
-    main.java.srcDirs = ['src']
+ext {
+    jlayerVersion = "1.0.1"
+}
+
+repositories {
+    mavenLocal();
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
-    compile 'javazoom:jlayer:1.0.1'
+    compile "javazoom:jlayer:$jlayerVersion"
 }
