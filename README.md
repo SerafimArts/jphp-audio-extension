@@ -1,24 +1,27 @@
 jphp-awt-extension
 ==================
 
-AWT Extension for Jphp Language
+Audio Extension for Jphp Language
 
 Available classes:
-- DisplayMode
-- GraphicsDevice
-- GraphicsEnvironment
+- AudioDevice
+- AudioSystem
+- AudioTrack
 
 Exmaple:
 
 ```php
 <?php
-use java\awt\DisplayMode;
-use java\awt\GraphicsEnvironment;
+use php\audio\AudioSystem;
+use php\audio\AudioDevice;
+use php\audio\AudioTrack;
+
+$devices = AudioSystem::getDevices(AudioDevice::SPEAKER);
+var_dump($devices);
 
 
-$device = GraphicsEnvironment::getDefaultScreenDevice();
-$device->setFullScreenWindow($this->getScreen());
-$device->setDisplayMode(
-  new DisplayMode(1280, 720, 32, DisplayMode::REFRESH_RATE_UNKNOWN)
-);
+$track = new AudioTrack(Stream::of('res://audio/1.mp3'));
+$track->setVolume($track->getVolumeMaximum() / 2);
+$track->setBalance($track->getBalanceMinimum());
+$track->play();
 ```
