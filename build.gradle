@@ -1,0 +1,7 @@
+sourceSets {
+    main.java.srcDirs = ['src']
+}
+
+dependencies {
+    compile 'javazoom:jlayer:1.0.1'
+}
