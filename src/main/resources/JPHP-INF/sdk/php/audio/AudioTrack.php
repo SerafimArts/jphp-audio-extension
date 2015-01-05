@@ -90,7 +90,7 @@ class AudioTrack
 
     /**
      * Set track volume
-     * @param $value
+     * @param int $value
      * @return $this
      */
     public function setVolume($value) { return $this; }
@@ -115,7 +115,7 @@ class AudioTrack
 
     /**
      * Set track pan
-     * @param $value
+     * @param float $value
      * @return $this
      */
     public function setPan($value) { return $this; }
@@ -140,7 +140,7 @@ class AudioTrack
 
     /**
      * Set track balance
-     * @param $value
+     * @param float $value
      * @return $this
      */
     public function setBalance($value) { return $this; }
