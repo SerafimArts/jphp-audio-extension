@@ -4,9 +4,14 @@ jphp-audio-extension
 Audio Extension for Jphp Language
 
 Available classes:
-- AudioDevice
-- AudioSystem
-- AudioTrack
+- php\audio\AudioDevice
+- php\audio\AudioSystem
+- php\audio\AudioTrack
+- php\audio\controls\PanControls
+- php\audio\controls\VolumeControls
+- php\audio\controls\BalanceControls
+- php\audio\controls\AbstractAudioControls
+
 
 Exmaple:
 
