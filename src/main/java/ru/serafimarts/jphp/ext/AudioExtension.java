@@ -2,9 +2,11 @@ package ru.serafimarts.jphp.ext;
 
 import php.runtime.env.CompileScope;
 import php.runtime.ext.support.Extension;
-import ru.serafimarts.jphp.ext.classes.WrapAudioDevice;
-import ru.serafimarts.jphp.ext.classes.WrapAudioSystem;
-import ru.serafimarts.jphp.ext.classes.WrapAudioTrack;
+import ru.serafimarts.jphp.ext.classes.*;
+import ru.serafimarts.jphp.ext.classes.controls.AbstractAudioControls;
+import ru.serafimarts.jphp.ext.classes.controls.WrapBalanceControls;
+import ru.serafimarts.jphp.ext.classes.controls.WrapPanControls;
+import ru.serafimarts.jphp.ext.classes.controls.WrapVolumeControls;
 
 
 public class AudioExtension extends Extension {
@@ -26,5 +28,11 @@ public class AudioExtension extends Extension {
         this.registerClass(scope, WrapAudioDevice.class);
         this.registerClass(scope, WrapAudioSystem.class);
         this.registerClass(scope, WrapAudioTrack.class);
+
+
+        this.registerClass(scope, AbstractAudioControls.class);
+        this.registerClass(scope, WrapBalanceControls.class);
+        this.registerClass(scope, WrapPanControls.class);
+        this.registerClass(scope, WrapVolumeControls.class);
     }
 }

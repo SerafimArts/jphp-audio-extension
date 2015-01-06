@@ -1,6 +1,9 @@
 <?php
 namespace php\audio;
 
+use php\audio\controls\BalanceControls;
+use php\audio\controls\PanControls;
+use php\audio\controls\VolumeControls;
 use php\io\Stream;
 
 /**
@@ -9,6 +12,21 @@ use php\io\Stream;
  */
 class AudioTrack
 {
+    /**
+     * @var BalanceControls
+     */
+    public $balance;
+
+    /**
+     * @var PanControls
+     */
+    public $pan;
+
+    /**
+     * @var VolumeControls
+     */
+    public $volume;
+
     /**
      * Create new audio track
      * @param Stream $stream
@@ -64,6 +82,7 @@ class AudioTrack
      */
     public function unmute() { return $this; }
 
+
     /**
      * Currently in play status
      * @return bool
@@ -87,80 +106,4 @@ class AudioTrack
      * @return int
      */
     public function getPosition() { return 0; }
-
-    /**
-     * Set track volume
-     * @param $value
-     * @return $this
-     */
-    public function setVolume($value) { return $this; }
-
-    /**
-     * Return track volume
-     * @return float
-     */
-    public function getVolume() { return 0.0; }
-
-    /**
-     * Return minimum volume
-     * @return float
-     */
-    public function getVolumeMinimum() { return 0.0; }
-
-    /**
-     * Return maximum volume
-     * @return float
-     */
-    public function getVolumeMaximum() { return 0.0; }
-
-    /**
-     * Set track pan
-     * @param $value
-     * @return $this
-     */
-    public function setPan($value) { return $this; }
-
-    /**
-     * Return track pan
-     * @return float
-     */
-    public function getPan() { return 0.0; }
-
-    /**
-     * Return minimum pan
-     * @return float
-     */
-    public function getPanMinimum() { return 0.0; }
-
-    /**
-     * Return maximum pan
-     * @return float
-     */
-    public function getPanMaximum() { return 0.0; }
-
-    /**
-     * Set track balance
-     * @param $value
-     * @return $this
-     */
-    public function setBalance($value) { return $this; }
-
-    /**
-     * Return track balance
-     * @return float
-     */
-    public function getBalance() { return 0.0; }
-
-    /**
-     * Return minimum balance
-     * @return float
-     */
-    public function getBalanceMinimum() { return 0.0; }
-
-    /**
-     * Return maximum balance
-     * @return float
-     */
-    public function getBalanceMaximum() { return 0.0; }
-
 }

@@ -100,6 +100,7 @@ public class Player {
     }
 
 
+
     public boolean isPlayed() {
         return this.played;
     }
@@ -113,90 +114,25 @@ public class Player {
     }
 
 
+
     public int getPosition() {
         return this.output.getPosition();
     }
 
-    public float getVolume() {
-        // 100 / (max-min) * ($value - min) = $percents
-
-        return 100 / this.gain.getMinimum() *
-                (this.gain.getValue() - this.gain.getMinimum());
+    public FloatControl getGainControls() {
+        return this.gain;
     }
 
-    public void setVolume(float value) {
-        // (max-min) / 100 * $percents + min = $value
-
-        if (value < 0.0) {
-            value = (float) 0.0;
-        } else if (value > 100.0) {
-            value = (float) 100.0;
-        }
-
-        double volume = Math.abs(this.gain.getMinimum() / 100 * value) + this.gain.getMinimum();
-
-        if (value < 1.0) {
-            this.mute();
-        } else {
-            this.unmute();
-        }
-
-        this.gain.setValue((float) volume);
+    public FloatControl getBalanceControls() {
+        return this.balance;
     }
 
-    public float getVolumeMinimum() {
-        return (float) 0.0;
+    public FloatControl getPanControls() {
+        return this.pan;
     }
 
-    public float getVolumeMaximum() {
-        return (float) 100.0;
-    }
+    public BooleanControl getMuteControls() { return this.mute; }
 
-
-    public float getBalance() {
-        return this.balance.getValue();
-    }
-
-    public void setBalance(float value) {
-        if (value < this.balance.getMinimum()) {
-            value = this.balance.getMinimum();
-        } else if (value > this.balance.getMaximum()) {
-            value = this.balance.getMaximum();
-        }
-
-        this.balance.setValue(value);
-    }
-
-    public float getBalanceMinimum() {
-        return this.balance.getMinimum();
-    }
-
-    public float getBalanceMaximum() {
-        return this.balance.getMaximum();
-    }
-
-
-    public float getPan() {
-        return this.pan.getValue();
-    }
-
-    public void setPan(float value) {
-        if (value < this.pan.getMinimum()) {
-            value = this.pan.getMinimum();
-        } else if (value > this.pan.getMaximum()) {
-            value = this.pan.getMaximum();
-        }
-
-        this.pan.setValue(value);
-    }
-
-    public float getPanMinimum() {
-        return this.pan.getMinimum();
-    }
-
-    public float getPanMaximum() {
-        return this.pan.getMaximum();
-    }
 
 
     private void render() {

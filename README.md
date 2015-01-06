@@ -21,7 +21,7 @@ var_dump($devices);
 
 
 $track = new AudioTrack(Stream::of('res://audio/1.mp3'));
-$track->setVolume($track->getVolumeMaximum() / 2);
-$track->setBalance($track->getBalanceMinimum());
+$track->volume->setValue($track->volume->getMaximum() / 2);
+$track->balance->setValue($track->balance->getMinimum());
 $track->play();
 ```
